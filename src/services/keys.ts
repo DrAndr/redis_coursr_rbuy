@@ -1,1 +1,6 @@
-export const pageCacheKey = (key: string)=>`pagecache#${key}`;
+export type ICacheKey = string;
+
+export const pageCacheKey = (rout: string): ICacheKey => `pagecache#${rout}`;
+export const userKey = (userId: string): ICacheKey => `user#${userId}`;
+export const sessionKey = (sessionId: string): ICacheKey => `session#${sessionId}`;
+export const itemKey = (sessionId: string): ICacheKey => `item#${sessionId}`;
