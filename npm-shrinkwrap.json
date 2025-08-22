@@ -34,7 +34,8 @@
 				"redis": "^4.0.3",
 				"redis-cli": "^2.1.2",
 				"ts-node": "^10.5.0",
-				"ts-node-dev": "^1.1.8"
+				"ts-node-dev": "^1.1.8",
+				"uuid": "^11.1.0"
 			},
 			"devDependencies": {
 				"@sveltejs/adapter-auto": "^1.0.0-next.17",
@@ -274,6 +275,16 @@
 				"node": ">=6.0"
 			}
 		},
+		"node_modules/@opencensus/core/node_modules/uuid": {
+			"version": "3.4.0",
+			"resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
+			"integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==",
+			"deprecated": "Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.",
+			"license": "MIT",
+			"bin": {
+				"uuid": "bin/uuid"
+			}
+		},
 		"node_modules/@opencensus/propagation-b3": {
 			"version": "0.0.8",
 			"resolved": "https://registry.npmjs.org/@opencensus/propagation-b3/-/propagation-b3-0.0.8.tgz",
@@ -299,6 +310,16 @@
 			},
 			"engines": {
 				"node": ">=6.0"
+			}
+		},
+		"node_modules/@opencensus/propagation-b3/node_modules/uuid": {
+			"version": "3.4.0",
+			"resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
+			"integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==",
+			"deprecated": "Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.",
+			"license": "MIT",
+			"bin": {
+				"uuid": "bin/uuid"
 			}
 		},
 		"node_modules/@pm2/agent": {
@@ -5004,12 +5025,16 @@
 			"integrity": "sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8="
 		},
 		"node_modules/uuid": {
-			"version": "3.4.0",
-			"resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
-			"integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==",
-			"deprecated": "Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.",
+			"version": "11.1.0",
+			"resolved": "https://registry.npmjs.org/uuid/-/uuid-11.1.0.tgz",
+			"integrity": "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==",
+			"funding": [
+				"https://github.com/sponsors/broofa",
+				"https://github.com/sponsors/ctavan"
+			],
+			"license": "MIT",
 			"bin": {
-				"uuid": "bin/uuid"
+				"uuid": "dist/esm/bin/uuid"
 			}
 		},
 		"node_modules/v8-compile-cache-lib": {
@@ -5858,6 +5883,13 @@
 				"semver": "^5.5.0",
 				"shimmer": "^1.2.0",
 				"uuid": "^3.2.1"
+			},
+			"dependencies": {
+				"uuid": {
+					"version": "3.4.0",
+					"resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
+					"integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
+				}
 			}
 		},
 		"@opencensus/propagation-b3": {
@@ -5880,6 +5912,11 @@
 						"shimmer": "^1.2.0",
 						"uuid": "^3.2.1"
 					}
+				},
+				"uuid": {
+					"version": "3.4.0",
+					"resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
+					"integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
 				}
 			}
 		},
@@ -9269,9 +9306,9 @@
 			"integrity": "sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8="
 		},
 		"uuid": {
-			"version": "3.4.0",
-			"resolved": "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz",
-			"integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
+			"version": "11.1.0",
+			"resolved": "https://registry.npmjs.org/uuid/-/uuid-11.1.0.tgz",
+			"integrity": "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A=="
 		},
 		"v8-compile-cache-lib": {
 			"version": "3.0.0",
