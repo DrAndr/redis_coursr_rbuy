@@ -1,7 +1,7 @@
 import type { CreateUserAttrs } from '$services/types';
 import { v4 as uuid } from 'uuid';
-import {userKey} from '$services/keys';
-import { client as redisClient } from '$services/redis';
+import { userKey, usernamesUniqueKey } from '$services/keys';
+import { client } from '$services/redis';
 
 type ISerializeData = Record<string, string | number>;
 
@@ -19,16 +19,28 @@ const deSerializeCreateUser = (id:number, userData:ISerializeData):ISerializeDat
 	};
 }
 
-export const getUserByUsername = async (username: string) => {};
+export const getUserByUsername = async (username: string) => {
+
+
+};
 
 export const getUserById = async (id: string):Promise<ISerializeData> => {
-	const user = await redisClient.hGetAll(userKey(id));
+	const user = await client.hGetAll(userKey(id));
 	return deSerializeCreateUser(parseInt(id), user);
 };
 
 export const createUser = async (attrs: CreateUserAttrs):Promise<string|number> => {
 	const uid = uuid();
-	return await redisClient.hSet(userKey(uid), serializeCreateUser(attrs) as ISerializeData);
+
+	const exists = await client.sIsMember(usernamesUniqueKey(), attrs.username); // check is username unique
+	if (exists) {
+		throw new Error('Username is taken');
+	}
+
+	await client.hSet(userKey(uid), serializeCreateUser(attrs) as ISerializeData); //add user
+	await client.sAdd(usernamesUniqueKey(), attrs.username); // add username to the stack
+
+	return uid;
 };
 
 
