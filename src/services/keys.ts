@@ -7,6 +7,7 @@ export const sessionKey = (sessionId: string): ICacheKey => `session#${sessionId
 export const itemKey = (sessionId: string): ICacheKey => `item#${sessionId}`;
 export const itemsByViewsKey = () => 'items:views';
 export const itemsByEndingAtKey = () => 'items:endingAt';
+export const itemsViewsKey = (itemId: string): ICacheKey => `items:views#${itemId}`;
 
 // Users keys
 export const userKey = (userId: string): ICacheKey => `user#${userId}`;
