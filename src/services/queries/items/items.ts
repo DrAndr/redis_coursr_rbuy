@@ -1,10 +1,10 @@
 import type { CreateItemAttrs, Item } from '$services/types';
-import { v4 as uuid } from 'uuid';
 import { serialize } from '$services/queries/items/serialize';
 import { deserialize } from '$services/queries/items/deserialize';
 import { client } from '$services/redis';
-import { itemKey } from '$services/keys';
+import { itemKey, itemsByEndingAtKey, itemsByViewsKey } from '$services/keys';
 import isEmpty from 'lodash/isEmpty';
+import { genId } from '$services/utils';
 
 export const getItem = async (id: string): Promise<Item | null> => {
 	const item = await client.hGetAll(itemKey(id));
@@ -35,8 +35,19 @@ export const getItems = async (ids: string[]) => {
 };
 
 export const createItem = async (attrs: CreateItemAttrs) => {
-	const itemId = uuid();
-	const response = await client.hSet(itemKey(itemId), serialize(attrs));
+	const itemId = genId();
+
+	await Promise.all([
+		client.hSet(itemKey(itemId), serialize(attrs)),
+		client.zAdd(itemsByViewsKey(), {
+			value: itemId,
+			score: 0 // initial views score
+		}),
+		client.zAdd(itemsByEndingAtKey(), {
+			value: itemId,
+			score: attrs.endingAt.toMillis()
+		})
+	])
 
 	return itemId;
 };
