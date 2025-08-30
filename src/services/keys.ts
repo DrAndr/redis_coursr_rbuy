@@ -9,6 +9,8 @@ export const itemsByViewsKey = () => 'items:views';
 export const itemsByEndingAtKey = () => 'items:endingAt';
 export const itemsViewsKey = (itemId: string): ICacheKey => `items:views#${itemId}`;
 
+export const bidHistoryKey = (itemId: string): ICacheKey => `history#${itemId}`;
+
 // Users keys
 export const userKey = (userId: string): ICacheKey => `user#${userId}`;
 export const usernamesUniqueKey = (): ICacheKey => 'usernames:unique';
