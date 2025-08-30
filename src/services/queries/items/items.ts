@@ -2,7 +2,7 @@ import type { CreateItemAttrs, Item } from '$services/types';
 import { serialize } from '$services/queries/items/serialize';
 import { deserialize } from '$services/queries/items/deserialize';
 import { client } from '$services/redis';
-import { itemKey, itemsByEndingAtKey, itemsByViewsKey } from '$services/keys';
+import { itemKey, itemsByEndingAtKey, itemsByPriceKey, itemsByViewsKey } from '$services/keys';
 import isEmpty from 'lodash/isEmpty';
 import { genId } from '$services/utils';
 
@@ -46,6 +46,10 @@ export const createItem = async (attrs: CreateItemAttrs) => {
 		client.zAdd(itemsByEndingAtKey(), {
 			value: itemId,
 			score: attrs.endingAt.toMillis()
+		}),
+		client.zAdd(itemsByPriceKey(), {
+			value: itemId,
+			score: 0
 		})
 	])
 

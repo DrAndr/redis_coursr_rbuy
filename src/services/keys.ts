@@ -8,6 +8,7 @@ export const itemKey = (sessionId: string): ICacheKey => `item#${sessionId}`;
 export const itemsByViewsKey = () => 'items:views';
 export const itemsByEndingAtKey = () => 'items:endingAt';
 export const itemsViewsKey = (itemId: string): ICacheKey => `items:views#${itemId}`;
+export const itemsByPriceKey = (): ICacheKey => 'items:price';
 
 export const bidHistoryKey = (itemId: string): ICacheKey => `history#${itemId}`;
 
