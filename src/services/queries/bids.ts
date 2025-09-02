@@ -1,42 +1,81 @@
 import type { CreateBidAttrs, Bid } from '$services/types';
 import { bidHistoryKey, itemKey, itemsByPriceKey } from '$services/keys';
 import { getItem } from '$services/queries/items';
-import { client } from '$services/redis';
+import { client, withLock } from '$services/redis';
 import { DateTime } from 'luxon';
 import map from 'lodash/map';
 
 export const createBid = async (attrs: CreateBidAttrs) => {
-	// Run isolated connection for conduct transaction
-	return await client.executeIsolated(async (isolatedClient)=>{
+	return withLock(attrs.itemId, async () => {
+		// Fetching the item
 		const item = await getItem(attrs.itemId);
 
+		// Doing validation
 		if (!item) {
-			throw new Error("Item does not exist");
+			throw new Error('Item does not exist');
 		}
 		if (item.price >= attrs.amount) {
-			throw new Error("Bid to low");
+			throw new Error('Bid to low');
 		}
 		if (item.endingAt.diff(DateTime.now()).toMillis() <= 0) {
-			throw new Error("Item closed to bidding");
+			throw new Error('Item closed to bidding');
 		}
 
 		const data = serializeHistory(attrs.amount, attrs.createdAt.toMillis());
 
-		return isolatedClient.multi() // start multiplication requests
+		// Writing some data
+		return Promise.all([
+			client.rPush(bidHistoryKey(attrs.itemId), data), // update bid history
+			client.hSet(itemKey(item.id), {
+				// update item price with new bid amount
+				bids: item.bids + 1, // how many times bid has been changed
+				price: attrs.amount, // new price according to new bid
+				highestBidUserId: attrs.userId // the ID of the user who last made a new bet
+			}),
+			client.zAdd(itemsByPriceKey(), {
+				// add data to the table for define costly items
+				value: item.id,
+				score: attrs.amount
+			})
+		]);
+	});
+
+/** The isolated approach is potentially problematic due to the loss
+ * of parallel requests during the blocking of the first one, and the second one is lost.
+ *
+	// Run isolated connection for conduct transaction
+	return await client.executeIsolated(async (isolatedClient) => {
+		const item = await getItem(attrs.itemId);
+
+		if (!item) {
+			throw new Error('Item does not exist');
+		}
+		if (item.price >= attrs.amount) {
+			throw new Error('Bid to low');
+		}
+		if (item.endingAt.diff(DateTime.now()).toMillis() <= 0) {
+			throw new Error('Item closed to bidding');
+		}
+
+		const data = serializeHistory(attrs.amount, attrs.createdAt.toMillis());
+
+		return isolatedClient
+			.multi() // start multiplication requests
 			.rPush(bidHistoryKey(attrs.itemId), data) // update bid history
-			.hSet(itemKey(item.id),{// update item price with new bid amount
+			.hSet(itemKey(item.id), {
+				// update item price with new bid amount
 				bids: item.bids + 1, // how many times bid has been changed
 				price: attrs.amount, // new price according to new bid
 				highestBidUserId: attrs.userId // the ID of the user who last made a new bet
 			})
-			.zAdd(itemsByPriceKey(), { // add data to the table for define costly items
+			.zAdd(itemsByPriceKey(), {
+				// add data to the table for define costly items
 				value: item.id,
 				score: attrs.amount
 			})
-			.exec() // execute multiple requests
-	})
-
-
+			.exec(); // execute multiple requests
+	});
+*/
 };
 
 export const getBidHistory = async (
