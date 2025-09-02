@@ -1,1 +1,1 @@
-export const addJob = (name: string, runAt: number, args: any) => {};
+export const addJob = (name: string, runAt: number, args: any) => [];
